@@ -36,6 +36,7 @@ function RenderCampsite(props) {
   const view = React.createRef();
 
   const recognizeDrag = ({ dx }) => (dx < -200 ? true : false);
+  const recognizeComment = ({ dx }) => (dx > 200 ? true : false);
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -68,6 +69,8 @@ function RenderCampsite(props) {
           ],
           { cancelable: false }
         );
+      } else if (recognizeComment(gestureState)) {
+        props.onShowModal();
       }
       return true;
     },
@@ -165,7 +168,7 @@ class CampsiteInfo extends Component {
   }
 
   handleComment(campsiteId) {
-    postComment(
+    this.props.postComment(
       campsiteId,
       this.state.rating,
       this.state.author,
@@ -253,7 +256,7 @@ class CampsiteInfo extends Component {
               <Button
                 title="Submit"
                 color="#5637dd"
-                onPress={(campsiteId) => {
+                onPress={() => {
                   this.handleComment(campsiteId);
                   this.resetForm();
                 }}
